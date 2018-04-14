@@ -1,6 +1,6 @@
 class Block{
   PVector position;
-  String nameFormat;
+  String[] label;
   Block parentBlock;
   Block child;
   color displayColor;
@@ -15,13 +15,29 @@ class Block{
   Block(){
     child = null;
     connectors = "";
+    setLabel("");
+  }
+  
+  void setLabel(String labelFormat){
+    label = split(labelFormat, "&IF%");
+    fields = new InputField[label.length];
+    for(int i = 0; i < fields.length; i ++){
+      fields[i] = new InputField();
+    }
   }
   
   void draw(){
     pushMatrix();
     translate(position.x, position.y);
     
-    int wide = 90;
+    
+    int wide = 0;
+    for(int i = 0; i < label.length; i ++){
+      wide += textWidth(label[i]);
+    }
+    for(int i = 0; i < fields.length; i ++){
+      wide += fields[i].getWidth();
+    }
     int tall = 35;
     
     fill(100, 100, 200);
