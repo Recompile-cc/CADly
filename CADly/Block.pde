@@ -17,6 +17,8 @@ class Block implements Cloneable{
   Block parentBlock;
   Block childBlock;
   
+  boolean isContainer = false;
+  
   static final float marginWidth = 10;
   static final float doveTailHeight = 5;
   
@@ -29,6 +31,10 @@ class Block implements Cloneable{
     
     
     setLabel("");
+  }
+  
+  void setContainer(boolean c){
+    isContainer = c;
   }
   
   void setParentBlock(Block pb){
@@ -93,6 +99,12 @@ class Block implements Cloneable{
     size.set(wide, tall);
   }
   
+  float getTotalHeight(){
+    if(hasChild){
+      
+    }
+  }
+  
   void draw(){
     pushMatrix();
     translate(position.x, position.y);
@@ -101,8 +113,11 @@ class Block implements Cloneable{
     strokeWeight(2);
     stroke(0);
     beginShape();
+    if(connectors.contains("c")){
+      vertex(-10, 0);
+    }
     vertex(0, 0);
-    if(connectors.contains("t")){
+    if(connectors.contains("t") || isContainer){
       vertex(10, 0);
       vertex(15, doveTailHeight);
       vertex(20, 0);
@@ -110,12 +125,15 @@ class Block implements Cloneable{
     vertex(size.x, 0);
     vertex(size.x, size.y);
     
-    if(connectors.contains("b")){
+    if(connectors.contains("b") || isContainer){
       vertex(20, size.y);
       vertex(15, size.y + doveTailHeight);
       vertex(10, size.y);
     }
     vertex(0, size.y);
+    if(isContainer){
+      vertex(
+    }
     vertex(0, 0);
     endShape();
     
