@@ -15,6 +15,9 @@ class ToolBox extends BlockBox{
   
   void addBlockToLibrary(Block toAdd){
     library = (Block[])append(library, toAdd);
+    if(toAdd.size.x > wide){
+      wide = toAdd.size.x + 20;
+    }
   }
   
   void mouseDown(){

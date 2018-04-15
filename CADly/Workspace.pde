@@ -57,10 +57,12 @@ class Workspace extends BlockBox{
   
   void update(){
     if(updating){
-      for(int i = blocks.size() - 1; i >= 0; i --){
-        blocks.get(i).update(this.eyePos);
-      }
-      println("Do updates");
+      try{
+        for(int i = blocks.size() - 1; i >= 0; i --){
+          blocks.get(i).update(this.eyePos);
+        }
+      } catch(Exception e){}
+      print();
       
       if(isHeld){
         eyePos.set(mouseX - relativeEye.x, mouseY - relativeEye.y);
@@ -80,9 +82,20 @@ class Workspace extends BlockBox{
   }
   
   void mouseUp(){
-    for(Block b : blocks){
+    for(int i = 0; i < blocks.size(); i ++){
+      Block b = blocks.get(i);
       if(b.isHeld){
         b.isHeld = false;
+        boolean s = true;
+        for(int j = blocks.size() - 1; j >= 0 && s; j --){
+          if(j != i){
+            Block b1 = blocks.get(j);
+            if(b.position.x > b1.position.x && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y){
+              b.setParentBlock(blocks.get(j));
+              s = false;
+            }
+          }
+        }
       }
     }
     if(isHeld){
@@ -99,6 +112,7 @@ class Workspace extends BlockBox{
     }
     if(!searching){
       b.isHeld = true;
+      b.hasParent = false;
     } else {
       relativeEye.set(mouseX - eyePos.x, mouseY - eyePos.y);;
       isHeld = true;

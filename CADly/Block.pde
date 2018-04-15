@@ -12,6 +12,10 @@ class Block implements Cloneable{
   
   String connectors;
   
+  boolean hasParent = false;
+  Block parentBlock;
+  Block childBlock;
+  
   static final float marginWidth = 10;
   static final float doveTailHeight = 5;
   
@@ -26,8 +30,25 @@ class Block implements Cloneable{
     setLabel("");
   }
   
+  void setParentBlock(Block pb){
+    hasParent = true;
+    parentBlock = pb;
+    pb.registerChild(this);
+    position.set(pb.position.x, pb.position.y + pb.size.y);
+  }
+  
+  void registerChild(Block c){
+    println("Child registered");
+    childBlock = c;
+  }
+  
   void setPosition(float x, float y){
     position.set(x, y);
+    try{
+      if(childBlock.hasParent){
+        childBlock.setPosition(x, y + size.y);
+      }
+    }catch (Exception e){}
   }
   
   void setConnections(String conns){
@@ -51,7 +72,8 @@ class Block implements Cloneable{
       float x = mouseX - relativeMouse.x - eyePos.x;
       float y = mouseY - relativeMouse.y - eyePos.y;
       
-      position.set(x, y);
+      setPosition(x, y);
+      //position.set(x, y);
     }
   }
   
