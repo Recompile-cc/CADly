@@ -146,6 +146,15 @@ void initializeLibrary(){
   move.setPosition(0, cylinder.position.y + cylinder.size.y + 10);
   move.setConnections("tb");
   move.setLabel("Move X:%IF% Y:%IF% Z:%IF%");
-  move.setCodeFormatter("translate([%F%,%F%,%F%){\n%BLOCKS%\n}\n");
+  move.setCodeFormatter("translate([%F%,%F%,%F%){\n%BLOCKS%}\n");
   tb.addBlockToLibrary(move);
+  
+  Block difference = new Block();
+  difference.setContainer(true);
+  difference.setColor(transformColor);
+  difference.setPosition(0, move.position.y + move.size.y + 25);
+  difference.setConnections("tb");
+  difference.setLabel("Cut");
+  difference.setCodeFormatter("difference(){\n%BLOCKS%}\n");
+  tb.addBlockToLibrary(difference);
 }
