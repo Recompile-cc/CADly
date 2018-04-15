@@ -157,4 +157,13 @@ void initializeLibrary(){
   difference.setLabel("Cut");
   difference.setCodeFormatter("difference(){\n%BLOCKS%}\n");
   tb.addBlockToLibrary(difference);
+  
+  Block sphere = new Block();
+  sphere.setContainer(false);
+  sphere.setColor(shapeGenerateColor);
+  sphere.setPosition(0, difference.position.y + difference.size.y + 25);
+  sphere.setConnections("tb");
+  sphere.setLabel("Ball r:%IF%");
+  sphere.setCodeFormatter("sphere(%F%);\n");
+  tb.addBlockToLibrary(sphere);
 }
