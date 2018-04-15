@@ -29,7 +29,9 @@ class InputField{
         }
       } else if((char)keyBuffer.get(0) == '\n'){
       } else {
-        userValue = userValue + (char)keyBuffer.get(0);
+        if(Character.isDigit((char)keyBuffer.get(0)) || (char)keyBuffer.get(0) == '.'){
+          userValue = userValue + (char)keyBuffer.get(0);
+        }
       }
       keyBuffer.remove(0);
     }
