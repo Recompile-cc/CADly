@@ -1,4 +1,4 @@
-class Workspace extends BlockBox{
+class Workspace{
   PVector eyePos;
   PVector relativeEye;
   boolean isHeld;
@@ -90,7 +90,7 @@ class Workspace extends BlockBox{
         for(int j = blocks.size() - 1; j >= 0 && s; j --){
           if(j != i){
             Block b1 = blocks.get(j);
-            if(b.position.x > b1.position.x && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y && b1.connectors.contains("b") && b.connectors.contains("t")){
+            if(b.position.x > b1.position.x - 5 && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y + 15 && b1.connectors.contains("b") && b.connectors.contains("t")){
               b.setParentBlock(blocks.get(j));
               s = false;
             }
@@ -107,6 +107,9 @@ class Workspace extends BlockBox{
     boolean searching = true;
     Block b = new Block();
     int i;
+    for(Block b1 : blocks){
+      b1.stopEdits();
+    }
     for(i = blocks.size() - 1; i >= 0 && searching; i --){
       b = blocks.get(i);
       searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y);

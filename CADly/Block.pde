@@ -17,6 +17,8 @@ class Block implements Cloneable{
   Block parentBlock;
   Block childBlock;
   
+  boolean editing = false;
+  
   boolean isContainer = false;
   
   static final float marginWidth = 10;
@@ -74,6 +76,12 @@ class Block implements Cloneable{
   }
   
   void update(PVector eyePos){
+    if(editing){
+      updateSize();
+      for(InputField f : fields){
+        f.update();
+      }
+    }
     if(isHeld){
       
       float x = mouseX - relativeMouse.x - eyePos.x;
@@ -163,8 +171,30 @@ class Block implements Cloneable{
     popMatrix();
   }
   
+  void stopEdits(){
+    editing = false;
+    for(InputField f : fields){
+      f.stopEdit();
+    }
+    updateSize();
+  }
+  
   boolean overlap(float x, float y){
     if( (x > position.x && x < position.x + size.x) && (y > position.y && y < position.y + size.y) ){
+      float target = marginWidth;
+      for(int i = 0; i < label.length; i ++){
+        target += textWidth(label[i]);
+        if(i < fields.length){
+          if(x > position.x + target && x < position.x + target + fields[i].getWidth()){
+            fields[i].startEdit();
+            this.editing = true;
+            return false;
+          }
+          target += fields[i].getWidth();
+        }
+      }
+      
+      
       relativeMouse.set(x - position.x, y - position.y);
       return true;
     }

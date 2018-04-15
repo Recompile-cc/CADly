@@ -2,8 +2,11 @@ PFont openSans;
 Workspace workArea;
 ToolBox tb;
 
+IntList keyBuffer;
+
 void setup(){
   size(1500, 900);
+  keyBuffer = new IntList(0);
   
   if(!platformNames[platform].equals("linux")){
     surface.setResizable(true);
@@ -29,8 +32,28 @@ void setup(){
 void draw(){
   background(255);
   
+  //println(keyBuffer);
+  
   workArea.draw();
   tb.draw();
+}
+
+void pull(int val){
+  try{
+    for(int i = keyBuffer.size() - 1; i >= 0; i --){
+      if(keyBuffer.get(i) == key){
+        keyBuffer.remove(i);
+      }
+    }
+  }catch(Exception e){}
+}
+
+void keyPressed(){
+  keyBuffer.append(key);
+}
+
+void keyReleased(){
+  pull(key);
 }
 
 void mousePressed(){
@@ -62,7 +85,7 @@ void initializeLibrary(){
   Block blockBuilder1 = new Block();
   blockBuilder1.setPosition(0, 0);
   blockBuilder1.setConnections("tb");
-  blockBuilder1.setLabel("Cube with side length %IF%");
+  blockBuilder1.setLabel("Cube with side length %IF% __ %IF%");
   blockBuilder1.updateSize();
   tb.addBlockToLibrary(blockBuilder1);
   

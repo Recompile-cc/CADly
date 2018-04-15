@@ -1,4 +1,5 @@
-class ToolBox extends BlockBox{
+class ToolBox{
+  PVector eyePos;
   float wide;
   Block[] library;
   Workspace ws;
