@@ -16,7 +16,7 @@ void setup(){
   feedBlock.connectors = "tb";
   feedBlock.setLabel("Cube with side %IF%");
   
-  workArea.addBlock(feedBlock);
+  workArea.addBlock(feedBlock.clone());
   
   workArea.startUpdates();
 }

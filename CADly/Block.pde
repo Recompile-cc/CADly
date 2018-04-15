@@ -1,4 +1,4 @@
-class Block{
+class Block implements Cloneable{
   PVector position;
   PVector size;
   String[] label;
@@ -27,6 +27,15 @@ class Block{
     
     
     setLabel("");
+  }
+  
+  Block clone(){
+    try{
+      return (Block)super.clone();
+    }catch(Exception e){
+      println("NO CLONE");
+    }
+    return new Block();
   }
   
   void update(){
