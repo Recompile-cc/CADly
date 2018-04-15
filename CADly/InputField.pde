@@ -3,8 +3,9 @@ class InputField{
   String userValue;
   static final float marginWidth = 5;
   
-  InputField(){
+  InputField(Block pB){
     userValue = "0.0";
+    parentBlock = pB;
   }
   
   void draw(float x, float y, float textHeight){

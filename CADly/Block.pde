@@ -1,10 +1,12 @@
 class Block{
   PVector position;
+  PVector size;
   String[] label;
   Block parentBlock;
   Block child;
   color displayColor;
   boolean isHeld;
+  PVector relativeMouse;
   float depth;
   String codeFormatter;
   InputField[] fields;
@@ -18,23 +20,32 @@ class Block{
   Block(){
     child = null;
     connectors = "";
-    setLabel("");
     displayColor = 0xFF8080FF;
+    position = new PVector(0,0);
+    size = new PVector(0, 0);
+    relativeMouse = new PVector(0, 0);
+    
+    
+    setLabel("");
+  }
+  
+  void update(){
+    if(isHeld){
+      position.set(mouseX - relativeMouse.x, mouseY - relativeMouse.y);
+    }
   }
   
   void setLabel(String labelFormat){
     label = split(labelFormat, "%IF%");
     fields = new InputField[label.length - 1];
     for(int i = 0; i < fields.length; i ++){
-      fields[i] = new InputField();
+      fields[i] = new InputField(this);
     }
+    
+    updateSize();
   }
   
-  void draw(){
-    pushMatrix();
-    translate(position.x, position.y);
-    
-    
+  void updateSize(){
     float wide = marginWidth;
     for(int i = 0; i < label.length; i ++){
       wide += textWidth(label[i]);
@@ -46,6 +57,13 @@ class Block{
     
     float tall = doveTailHeight * 3 + (textAscent() + textDescent());
     
+    size.set(wide, tall);
+  }
+  
+  void draw(){
+    pushMatrix();
+    translate(position.x, position.y);
+    
     fill(displayColor);
     strokeWeight(2);
     stroke(0);
@@ -56,15 +74,15 @@ class Block{
       vertex(15, doveTailHeight);
       vertex(20, 0);
     }
-    vertex(wide, 0);
-    vertex(wide, tall);
+    vertex(size.x, 0);
+    vertex(size.x, size.y);
     
     if(connectors.contains("b")){
-      vertex(20, tall);
-      vertex(15, tall + doveTailHeight);
-      vertex(10, tall);
+      vertex(20, size.y);
+      vertex(15, size.y + doveTailHeight);
+      vertex(10, size.y);
     }
-    vertex(0, tall);
+    vertex(0, size.y);
     vertex(0, 0);
     endShape();
     
@@ -84,6 +102,11 @@ class Block{
     popMatrix();
   }
   
-  void update(){
+  boolean overlap(float x, float y){
+    if( (x > position.x && x < position.x + size.x) && (y > position.y && y < position.y + size.y) ){
+      relativeMouse.set(x - position.x, y - position.y);
+      return true;
+    }
+    return false;
   }
 }
