@@ -57,7 +57,9 @@ class InputField{
   }
   
   float getWidth(){
-    //Temporary
-    return textWidth(userValue) + marginWidth*2;
+    float v = textWidth(userValue) + marginWidth*2;
+    if(v != 32.0){ 
+    }
+    return v;
   }
 }

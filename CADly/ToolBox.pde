@@ -25,7 +25,7 @@ class ToolBox{
     boolean searching = true;
     int i;
     for(i = 0; i < library.length && searching; i ++){
-      searching = !library[i].overlap(mouseX - eyePos.x, mouseY - eyePos.y);
+      searching = !library[i].overlap(mouseX - eyePos.x, mouseY - eyePos.y, false);
     }
     if(!searching){
       ws.addBlock(library[i-1].copy());

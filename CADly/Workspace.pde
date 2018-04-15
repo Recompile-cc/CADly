@@ -57,11 +57,26 @@ class Workspace{
   
   void update(){
     if(updating){
+      boolean hasStart = false;
       try{
         for(int i = blocks.size() - 1; i >= 0; i --){
           blocks.get(i).update(this.eyePos);
+          if(!hasStart){
+            hasStart = blocks.get(i).isStart;
+          }
+        }
+        
+        if(!hasStart){
+          Block start = new Block();
+          start.setColor(100, 255, 100);
+          start.setPosition(0, 0);
+          start.setConnections("b");
+          start.setLabel("Start");
+          start.isStart = true;
+          addBlock(start);
         }
       } catch(Exception e){}
+     
       print();
       
       if(isHeld){
@@ -82,24 +97,47 @@ class Workspace{
   }
   
   void mouseUp(){
-    for(int i = 0; i < blocks.size(); i ++){
-      Block b = blocks.get(i);
-      if(b.isHeld){
-        b.isHeld = false;
-        boolean s = true;
-        for(int j = blocks.size() - 1; j >= 0 && s; j --){
-          if(j != i){
-            Block b1 = blocks.get(j);
-            if(b.position.x > b1.position.x - 5 && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y + 15 && b1.connectors.contains("b") && b.connectors.contains("t")){
-              b.setParentBlock(blocks.get(j));
-              s = false;
+    if(mouseX > width-60 && mouseY > height -60){
+      for(Block b : blocks){
+        if(b.isHeld){
+          b.queueDelete();
+        }
+      }
+      
+      for(int i = blocks.size() -1; i >= 0; i --){
+        if(blocks.get(i).inDeleteQueue){
+          blocks.remove(i);
+        }
+      }
+    } else {
+      for(int i = 0; i < blocks.size(); i ++){
+        Block b = blocks.get(i);
+        if(b.isHeld){
+          b.isHeld = false;
+          boolean s = true;
+          for(int j = blocks.size() - 1; j >= 0 && s; j --){
+            if(j != i){
+              Block b1 = blocks.get(j);
+              if(b.position.x > b1.position.x - 5 && b.position.x < b1.position.x + b1.size.x && b1.connectors.contains("b") && b.connectors.contains("t")){
+                float totalHeight = 0;
+                if(b1.isContainer){
+                  totalHeight = b1.getTotalHeight();
+                }
+                if(b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y + 15){
+                  b.setParentBlock(blocks.get(j));
+                  s = false;
+                } else  if(b1.isContainer && b.position.y > b1.position.y +  totalHeight -25 && b.position.y < b1.position.y + totalHeight +15){
+                  b.setParentBlock(blocks.get(j), false);
+                  s = false;
+                }
+              }
             }
           }
         }
       }
-    }
-    if(isHeld){
-      isHeld = false;
+      if(isHeld){
+        isHeld = false;
+      }
     }
   }
   
@@ -112,7 +150,7 @@ class Workspace{
     }
     for(i = blocks.size() - 1; i >= 0 && searching; i --){
       b = blocks.get(i);
-      searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y);
+      searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y, true);
     }
     if(!searching){
       b.isHeld = true;
@@ -121,6 +159,9 @@ class Workspace{
       if(b.hasParent){
         b.parentBlock.hasChild = false;
         b.hasParent = false;
+      } else if(b.isBottomChild){
+        b.parentBlock.hasBottomChild = false;
+        b.isBottomChild = false;
       }
     } else {
       relativeEye.set(mouseX - eyePos.x, mouseY - eyePos.y);;

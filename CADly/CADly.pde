@@ -32,10 +32,28 @@ void setup(){
 void draw(){
   background(255);
   
-  //println(keyBuffer);
-  
   workArea.draw();
   tb.draw();
+  
+  drawDelete();
+  drawCodeRender();
+}
+
+void drawDelete(){
+  pushStyle();
+  stroke(255, 20, 20);
+  strokeWeight(10);
+  line(width-5, height-5, width -60, height -60);
+  line(width-60, height -5, width-5, height - 60);
+  popStyle();
+}
+
+void drawCodeRender(){
+  pushStyle();
+  ellipseMode(CORNER);
+  fill(100, 255, 100);
+  ellipse(width - 40, 0, 40, 40);
+  popStyle();
 }
 
 void pull(int val){
@@ -57,7 +75,14 @@ void keyReleased(){
 }
 
 void mousePressed(){
-  if(mouseX > tb.wide){
+  if(mouseX > width - 40 && mouseY < 40){
+    for(Block b : workArea.blocks){
+      if(b.isStart){
+        saveStrings("out.scad", new String[]{b.renderCodeString()});
+        println("Done");
+      }
+    }
+  } else if(mouseX > tb.wide){
     workArea.mouseDown();
   } else {
     tb.mouseDown();
@@ -75,25 +100,24 @@ void workAreaUpdate(){
 }
 
 void initializeLibrary(){
-  Block blockBuilder = new Block();
-  blockBuilder.setPosition(0, 0);
-  blockBuilder.setConnections("b");
-  blockBuilder.setLabel("Start");
-  //tb.addBlockToLibrary(blockBuilder);
-  workArea.addBlock(blockBuilder);
+  color shapeGenerateColor = color(100, 100, 255);
+  color transformColor = color(255, 255, 100);
   
-  Block blockBuilder1 = new Block();
-  blockBuilder1.setPosition(0, 0);
-  blockBuilder1.setConnections("tb");
-  blockBuilder1.setLabel("Cube with side length %IF% __ %IF%");
-  blockBuilder1.updateSize();
-  tb.addBlockToLibrary(blockBuilder1);
+  Block cube = new Block();
+  cube.setContainer(false);
+  cube.setColor(shapeGenerateColor);
+  cube.setPosition(0, 0);
+  cube.setConnections("tb");
+  cube.setLabel("Cube %IF%");
+  cube.setCodeFormatter("cube(%F%);\n");
+  tb.addBlockToLibrary(cube);
   
-  Block blockBuilder2 = new Block();
-  blockBuilder2.setPosition(0, 60);
-  blockBuilder2.setConnections("tb");
-  blockBuilder2.setLabel("Container test");
-  blockBuilder2.setContainer(true);
-  blockBuilder2.updateSize();
-  tb.addBlockToLibrary(blockBuilder2);
+  Block rotate = new Block();
+  rotate.setContainer(true);
+  rotate.setColor(transformColor);
+  rotate.setPosition(0, cube.position.y + cube.size.y + 10);
+  rotate.setConnections("tb");
+  rotate.setLabel("Rotate X:%IF% Y:%IF% Z:%IF%");
+  rotate.setCodeFormatter("rotate([%F%,%F%,%F%]){\n%BLOCKS%}\n");
+  tb.addBlockToLibrary(rotate);
 }
