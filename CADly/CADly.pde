@@ -13,7 +13,8 @@ void setup(){
   if(!platformNames[platform].equals("linux")){
     surface.setResizable(true);
   }
-  
+  PImage icon = loadImage("icon.png");
+  surface.setIcon(icon);
   openSans = createFont("Open_Sans/OpenSans-Bold.ttf", 30);
   textFont(openSans);
   textSize(15);
