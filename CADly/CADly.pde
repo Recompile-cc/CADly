@@ -60,9 +60,17 @@ void initializeLibrary(){
   workArea.addBlock(blockBuilder);
   
   Block blockBuilder1 = new Block();
-  blockBuilder1.updateSize();
   blockBuilder1.setPosition(0, 0);
   blockBuilder1.setConnections("tb");
   blockBuilder1.setLabel("Cube with side length %IF%");
+  blockBuilder1.updateSize();
   tb.addBlockToLibrary(blockBuilder1);
+  
+  Block blockBuilder2 = new Block();
+  blockBuilder2.setPosition(0, 60);
+  blockBuilder2.setConnections("tb");
+  blockBuilder2.setLabel("Container test");
+  blockBuilder2.setContainer(true);
+  blockBuilder2.updateSize();
+  tb.addBlockToLibrary(blockBuilder2);
 }

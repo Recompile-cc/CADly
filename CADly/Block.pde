@@ -100,9 +100,14 @@ class Block implements Cloneable{
   }
   
   float getTotalHeight(){
-    if(hasChild){
-      
+    float tHeight = 0;
+    Block hTree = this;
+    while(hTree.hasChild){
+      tHeight += hTree.size.y;
+      hTree = hTree.childBlock;
     }
+    tHeight += hTree.size.y;
+    return tHeight;
   }
   
   void draw(){
@@ -117,7 +122,7 @@ class Block implements Cloneable{
       vertex(-10, 0);
     }
     vertex(0, 0);
-    if(connectors.contains("t") || isContainer){
+    if(connectors.contains("t")){
       vertex(10, 0);
       vertex(15, doveTailHeight);
       vertex(20, 0);
@@ -132,7 +137,12 @@ class Block implements Cloneable{
     }
     vertex(0, size.y);
     if(isContainer){
-      vertex(
+      float totalHeight = getTotalHeight();
+      vertex(0, totalHeight);
+      vertex(size.x, totalHeight);
+      vertex(size.x, totalHeight + 10);
+      vertex(-10, totalHeight + 10);
+      vertex(-10, 0);
     }
     vertex(0, 0);
     endShape();
@@ -165,6 +175,7 @@ class Block implements Cloneable{
     Block b = new Block();
     b.setLabel(formatLabel);
     b.setConnections(connectors);
+    b.setContainer(isContainer);
     return b;
   }
 }
