@@ -10,9 +10,10 @@ class Block implements Cloneable{
   PVector relativeMouse;
   String codeFormatter;
   
-  String connectors;
+  String connectors; //'b' for bottom, 't' for top
   
   boolean hasParent = false;
+  boolean hasChild = false;
   Block parentBlock;
   Block childBlock;
   
@@ -34,17 +35,18 @@ class Block implements Cloneable{
     hasParent = true;
     parentBlock = pb;
     pb.registerChild(this);
-    position.set(pb.position.x, pb.position.y + pb.size.y);
+    setPosition(pb.position.x, pb.position.y + pb.size.y);
   }
   
   void registerChild(Block c){
+    hasChild = true;
     childBlock = c;
   }
   
   void setPosition(float x, float y){
     position.set(x, y);
     try{
-      if(childBlock.hasParent){
+      if(childBlock.hasParent && hasChild){
         childBlock.setPosition(x, y + size.y);
       }
     }catch (Exception e){}
