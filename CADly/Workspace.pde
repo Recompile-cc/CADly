@@ -5,6 +5,9 @@ class Workspace{
   ArrayList<Block> blocks;
   boolean updating = false;
   
+  static final float majorGridSize = 100;
+  static final float minorGridSize = 20;
+  
   Workspace(){
     blocks = new ArrayList<Block>(0);
     eyePos = new PVector(0,0);
@@ -19,6 +22,28 @@ class Workspace{
   void draw(){
     pushMatrix();
     translate(eyePos.x, eyePos.y);
+    
+    
+    stroke(225);
+    float start = floor(-eyePos.x/minorGridSize)*minorGridSize;
+    for(float i = start; i < width - eyePos.x; i += minorGridSize){
+      line(i, -eyePos.y, i, height - eyePos.y);
+    }
+    start = floor(-eyePos.y/minorGridSize)*minorGridSize;
+    for(float i = start; i < height - eyePos.y; i += minorGridSize){
+      line(-eyePos.x, i, width - eyePos.x, i);
+    }
+    
+    stroke(180);
+    start = floor(-eyePos.x/majorGridSize)*majorGridSize;
+    for(float i = start; i < width - eyePos.x; i += majorGridSize){
+      line(i, -eyePos.y, i, height - eyePos.y);
+    }
+    start = floor(-eyePos.y/majorGridSize)*majorGridSize;
+    for(float i = start; i < height - eyePos.y; i += majorGridSize){
+      line(-eyePos.x, i, width - eyePos.x, i);
+    }
+    
     for(Block b : blocks){
       b.draw();
     }
@@ -60,10 +85,10 @@ class Workspace{
   
   void mouseDown(){
     boolean searching = true;
-    Block b = new Block();
+    Block b = new Block(this);
     for(int i = blocks.size() - 1; i >= 0 && searching; i --){
       b = blocks.get(i);
-      searching = !b.overlap(mouseX, mouseY);
+      searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y);
     }
     if(!searching){
       b.isHeld = true;

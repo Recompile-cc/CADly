@@ -1,4 +1,5 @@
 class Block implements Cloneable{
+  Workspace ws;
   PVector position;
   PVector size;
   String[] label;
@@ -17,7 +18,8 @@ class Block implements Cloneable{
   static final float marginWidth = 10;
   static final float doveTailHeight = 5;
   
-  Block(){
+  Block(Workspace ws){
+    this.ws = ws;
     child = null;
     connectors = "";
     displayColor = 0xFF8080FF;
@@ -35,13 +37,13 @@ class Block implements Cloneable{
     }catch(Exception e){
       println("NO CLONE");
     }
-    return new Block();
+    return new Block(ws);
   }
   
   void update(){
     if(isHeld){
-      float x = mouseX - relativeMouse.x;
-      float y = mouseY - relativeMouse.y;
+      float x = mouseX - relativeMouse.x - ws.eyePos.x;
+      float y = mouseY - relativeMouse.y - ws.eyePos.y;
       
       position.set(x, y);
     }

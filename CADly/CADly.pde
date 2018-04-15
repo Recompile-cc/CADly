@@ -11,10 +11,10 @@ void setup(){
   noSmooth();
   
   workArea = new Workspace();
-  Block feedBlock = new Block();
+  Block feedBlock = new Block(workArea);
   feedBlock.position.set(100, 100);
   feedBlock.connectors = "tb";
-  feedBlock.setLabel("Cube with side %IF%");
+  feedBlock.setLabel("Cube with side length %IF%");
   
   workArea.addBlock(feedBlock.clone());
   
