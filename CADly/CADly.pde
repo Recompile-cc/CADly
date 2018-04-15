@@ -1,8 +1,9 @@
 PFont openSans;
 Workspace workArea;
+ToolBox tb;
 
 void setup(){
-  size(800, 800);
+  size(1500, 900);
   
   if(!platformNames[platform].equals("linux")){
     surface.setResizable(true);
@@ -15,12 +16,12 @@ void setup(){
   noSmooth();
   
   workArea = new Workspace();
-  Block feedBlock = new Block(workArea);
-  feedBlock.position.set(100, 100);
-  feedBlock.connectors = "tb";
-  feedBlock.setLabel("Cube with side length %IF%");
   
-  workArea.addBlock(feedBlock.clone());
+  tb = new ToolBox(workArea);
+  tb.setWidth(200);
+  
+  initializeLibrary();
+  
   
   workArea.startUpdates();
 }
@@ -29,10 +30,15 @@ void draw(){
   background(255);
   
   workArea.draw();
+  tb.draw();
 }
 
 void mousePressed(){
-  workArea.mouseDown();
+  if(mouseX > tb.wide){
+    workArea.mouseDown();
+  } else {
+    tb.mouseDown();
+  }
 }
 
 void mouseReleased(){
@@ -43,4 +49,13 @@ void workAreaUpdate(){
   while(workArea.updating){
     workArea.update();
   }
+}
+
+void initializeLibrary(){
+  Block blockBuilder = new Block(tb);
+  blockBuilder.setPosition(0, 0);
+  blockBuilder.setConnections("b");
+  blockBuilder.setLabel("Start");
+  
+  tb.addBlockToLibrary(blockBuilder.copy(tb));
 }

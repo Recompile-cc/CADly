@@ -1,4 +1,4 @@
-class Workspace{
+class Workspace extends BlockBox{
   PVector eyePos;
   PVector relativeEye;
   boolean isHeld;
@@ -16,6 +16,9 @@ class Workspace{
   }
   
   void addBlock(Block b){
+    b.ws = this;
+    b.ws.eyePos = this.eyePos;
+    b.setPosition(width / 2 - eyePos.x, height / 2 - eyePos.y);
     blocks.add(b);
   }
   
@@ -25,20 +28,24 @@ class Workspace{
     
     
     stroke(225);
+    strokeWeight(2);
     float start = floor(-eyePos.x/minorGridSize)*minorGridSize;
     for(float i = start; i < width - eyePos.x; i += minorGridSize){
       line(i, -eyePos.y, i, height - eyePos.y);
     }
+    strokeWeight(1);
     start = floor(-eyePos.y/minorGridSize)*minorGridSize;
     for(float i = start; i < height - eyePos.y; i += minorGridSize){
       line(-eyePos.x, i, width - eyePos.x, i);
     }
     
     stroke(180);
+    strokeWeight(2);
     start = floor(-eyePos.x/majorGridSize)*majorGridSize;
     for(float i = start; i < width - eyePos.x; i += majorGridSize){
       line(i, -eyePos.y, i, height - eyePos.y);
     }
+    strokeWeight(1);
     start = floor(-eyePos.y/majorGridSize)*majorGridSize;
     for(float i = start; i < height - eyePos.y; i += majorGridSize){
       line(-eyePos.x, i, width - eyePos.x, i);
@@ -51,7 +58,7 @@ class Workspace{
   }
   
   void update(){
-    while(updating){
+    if(updating){
       for(Block b : blocks){
         b.update();
       }
@@ -62,7 +69,7 @@ class Workspace{
   }
   
   void startUpdates(){
-    if(!updating){
+    while(!updating){
       updating = true;
       thread("workAreaUpdate");
     }

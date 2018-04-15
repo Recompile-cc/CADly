@@ -1,26 +1,23 @@
 class Block implements Cloneable{
-  Workspace ws;
+  BlockBox ws;
   PVector position;
   PVector size;
   String[] label;
-  Block parentBlock;
-  Block child;
+  String formatLabel;
+  InputField[] fields;
+  
   color displayColor;
   boolean isHeld;
   PVector relativeMouse;
-  float depth;
   String codeFormatter;
-  InputField[] fields;
   
-  boolean isContainer;
   String connectors;
   
   static final float marginWidth = 10;
   static final float doveTailHeight = 5;
   
-  Block(Workspace ws){
+  Block(BlockBox ws){
     this.ws = ws;
-    child = null;
     connectors = "";
     displayColor = 0xFF8080FF;
     position = new PVector(0,0);
@@ -31,25 +28,20 @@ class Block implements Cloneable{
     setLabel("");
   }
   
-  Block clone(){
-    try{
-      return (Block)super.clone();
-    }catch(Exception e){
-      println("NO CLONE");
-    }
-    return new Block(ws);
+  void setPosition(float x, float y){
+    position.set(x, y);
   }
   
-  void update(){
-    if(isHeld){
-      float x = mouseX - relativeMouse.x - ws.eyePos.x;
-      float y = mouseY - relativeMouse.y - ws.eyePos.y;
-      
-      position.set(x, y);
-    }
+  void setConnections(String conns){
+    connectors = conns;
+  }
+  
+  void setBox(BlockBox bb){
+    ws = bb;
   }
   
   void setLabel(String labelFormat){
+    formatLabel = labelFormat;
     label = split(labelFormat, "%IF%");
     fields = new InputField[label.length - 1];
     for(int i = 0; i < fields.length; i ++){
@@ -57,6 +49,16 @@ class Block implements Cloneable{
     }
     
     updateSize();
+  }
+  
+  void update(){
+    if(isHeld){
+      
+      float x = mouseX - relativeMouse.x - ws.eyePos.x;
+      float y = mouseY - relativeMouse.y - ws.eyePos.y;
+      
+      position.set(x, y);
+    }
   }
   
   void updateSize(){
@@ -122,5 +124,12 @@ class Block implements Cloneable{
       return true;
     }
     return false;
+  }
+  
+  Block copy(BlockBox bb){
+    Block b = new Block(bb);
+    b.setLabel(formatLabel);
+    b.setConnections(connectors);
+    return b;
   }
 }

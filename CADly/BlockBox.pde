@@ -1,0 +1,3 @@
+class BlockBox{
+  PVector eyePos;
+}
