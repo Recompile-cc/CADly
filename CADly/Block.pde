@@ -31,7 +31,10 @@ class Block{
   
   void update(){
     if(isHeld){
-      position.set(mouseX - relativeMouse.x, mouseY - relativeMouse.y);
+      float x = mouseX - relativeMouse.x;
+      float y = mouseY - relativeMouse.y;
+      
+      position.set(x, y);
     }
   }
   
