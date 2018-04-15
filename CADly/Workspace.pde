@@ -92,9 +92,6 @@ class Workspace extends BlockBox{
             Block b1 = blocks.get(j);
             if(b.position.x > b1.position.x && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y && b1.connectors.contains("b") && b.connectors.contains("t")){
               b.setParentBlock(blocks.get(j));
-              if(b1.hasChild){
-                b1.childBlock.setParentBlock(b);
-              }
               s = false;
             }
           }
@@ -109,12 +106,15 @@ class Workspace extends BlockBox{
   void mouseDown(){
     boolean searching = true;
     Block b = new Block();
-    for(int i = blocks.size() - 1; i >= 0 && searching; i --){
+    int i;
+    for(i = blocks.size() - 1; i >= 0 && searching; i --){
       b = blocks.get(i);
       searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y);
     }
     if(!searching){
       b.isHeld = true;
+      blocks.add(b);
+      blocks.remove(i+1);
       if(b.hasParent){
         b.parentBlock.hasChild = false;
         b.hasParent = false;
