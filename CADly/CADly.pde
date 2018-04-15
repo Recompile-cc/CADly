@@ -1,3 +1,5 @@
+import static javax.swing.JOptionPane.*;
+
 PFont openSans;
 Workspace workArea;
 ToolBox tb;
@@ -76,12 +78,7 @@ void keyReleased(){
 
 void mousePressed(){
   if(mouseX > width - 40 && mouseY < 40){
-    for(Block b : workArea.blocks){
-      if(b.isStart){
-        saveStrings("out.scad", new String[]{b.renderCodeString()});
-        println("Done");
-      }
-    }
+      selectOutput("Save SCAD file", "saveFile");  
   } else if(mouseX > tb.wide){
     workArea.mouseDown();
   } else {
@@ -99,6 +96,19 @@ void workAreaUpdate(){
   }
 }
 
+void saveFile(File selection){
+  if (selection == null){
+    showMessageDialog(null, "No Save selected.", "Alert", ERROR_MESSAGE);
+  }else{
+    for(Block b : workArea.blocks){
+      if(b.isStart){
+        saveStrings(selection.getAbsolutePath() + ".scad" , new String[]{b.renderCodeString()});
+        println("Saved to: " + selection.getAbsolutePath() + ".scad");
+      }
+    }
+  }
+}
+
 void initializeLibrary(){
   color shapeGenerateColor = color(100, 100, 255);
   color transformColor = color(255, 255, 100);
@@ -109,7 +119,7 @@ void initializeLibrary(){
   cube.setPosition(0, 0);
   cube.setConnections("tb");
   cube.setLabel("Cube %IF%");
-  cube.setCodeFormatter("cube(%F%);\n");
+  cube.setCodeFormatter("cube(%F%, center = true);\n");
   tb.addBlockToLibrary(cube);
   
   Block rotate = new Block();
@@ -120,4 +130,22 @@ void initializeLibrary(){
   rotate.setLabel("Rotate X:%IF% Y:%IF% Z:%IF%");
   rotate.setCodeFormatter("rotate([%F%,%F%,%F%]){\n%BLOCKS%}\n");
   tb.addBlockToLibrary(rotate);
+  
+  Block cylinder = new Block();
+  cylinder.setContainer(false);
+  cylinder.setColor(shapeGenerateColor);
+  cylinder.setPosition(0, rotate.position.y + rotate.size.y + 25);
+  cylinder.setConnections("tb");
+  cylinder.setLabel("Cylinder H:%IF% R:%IF%");
+  cylinder.setCodeFormatter("cylinder( h = %F%, r = %F%, center = true);\n");
+  tb.addBlockToLibrary(cylinder);
+
+  Block move = new Block();
+  move.setContainer(true);
+  move.setColor(transformColor);
+  move.setPosition(0, cylinder.position.y + cylinder.size.y + 10);
+  move.setConnections("tb");
+  move.setLabel("Move X:%IF% Y:%IF% Z:%IF%");
+  move.setCodeFormatter("translate([%F%,%F%,%F%){\n%BLOCKS%\n}\n");
+  tb.addBlockToLibrary(move);
 }
