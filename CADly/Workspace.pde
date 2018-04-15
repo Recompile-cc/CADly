@@ -90,7 +90,7 @@ class Workspace extends BlockBox{
         for(int j = blocks.size() - 1; j >= 0 && s; j --){
           if(j != i){
             Block b1 = blocks.get(j);
-            if(b.position.x > b1.position.x && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y){
+            if(b.position.x > b1.position.x && b.position.x < b1.position.x + b1.size.x &&  b.position.y > b1.position.y + b1.size.y - 25 && b.position.y < b1.position.y + b1.size.y && b1.connectors.contains("b") && b.connectors.contains("t")){
               b.setParentBlock(blocks.get(j));
               s = false;
             }

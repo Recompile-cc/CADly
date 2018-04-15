@@ -38,7 +38,6 @@ class Block implements Cloneable{
   }
   
   void registerChild(Block c){
-    println("Child registered");
     childBlock = c;
   }
   
