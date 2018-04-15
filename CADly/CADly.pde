@@ -52,10 +52,19 @@ void workAreaUpdate(){
 }
 
 void initializeLibrary(){
-  Block blockBuilder = new Block(tb);
+  Block blockBuilder = new Block();
   blockBuilder.setPosition(0, 0);
   blockBuilder.setConnections("b");
   blockBuilder.setLabel("Start");
   
-  tb.addBlockToLibrary(blockBuilder.copy(tb));
+  tb.addBlockToLibrary(blockBuilder);
+  
+  
+  Block blockBuilder1 = new Block();
+  blockBuilder1.updateSize();
+  blockBuilder1.setPosition(0, 60);
+  blockBuilder1.setConnections("tb");
+  blockBuilder1.setLabel("Cube with side length %IF%");
+  
+  tb.addBlockToLibrary(blockBuilder1);
 }

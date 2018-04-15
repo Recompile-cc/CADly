@@ -16,8 +16,6 @@ class Workspace extends BlockBox{
   }
   
   void addBlock(Block b){
-    b.ws = this;
-    b.ws.eyePos = this.eyePos;
     b.setPosition(width / 2 - eyePos.x, height / 2 - eyePos.y);
     blocks.add(b);
   }
@@ -59,9 +57,11 @@ class Workspace extends BlockBox{
   
   void update(){
     if(updating){
-      for(Block b : blocks){
-        b.update();
+      for(int i = blocks.size() - 1; i >= 0; i --){
+        blocks.get(i).update(this.eyePos);
       }
+      println("Do updates");
+      
       if(isHeld){
         eyePos.set(mouseX - relativeEye.x, mouseY - relativeEye.y);
       }
@@ -92,7 +92,7 @@ class Workspace extends BlockBox{
   
   void mouseDown(){
     boolean searching = true;
-    Block b = new Block(this);
+    Block b = new Block();
     for(int i = blocks.size() - 1; i >= 0 && searching; i --){
       b = blocks.get(i);
       searching = !b.overlap(mouseX - eyePos.x, mouseY - eyePos.y);

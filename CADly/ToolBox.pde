@@ -24,7 +24,7 @@ class ToolBox extends BlockBox{
       searching = !library[i].overlap(mouseX - eyePos.x, mouseY - eyePos.y);
     }
     if(!searching){
-      ws.addBlock(library[i-1].copy(this));
+      ws.addBlock(library[i-1].copy());
     }
   }
   
