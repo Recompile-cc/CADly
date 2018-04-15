@@ -4,6 +4,8 @@ Workspace workArea;
 void setup(){
   size(800, 800);
   
+  surface.setResizable(true);
+  
   openSans = createFont("Open_Sans/OpenSans-Bold.ttf", 30);
   textFont(openSans);
   textSize(15);
@@ -24,7 +26,7 @@ void setup(){
 void draw(){
   background(255);
   
-  workArea.draw();
+  //workArea.draw();
 }
 
 void mousePressed(){
